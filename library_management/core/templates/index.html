@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="flex flex-wrap p-4">
+  <div class="w-1/6 bg-white p-3">
+    <h5>All Categories</h5>
+    {% for cat in category %}
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="category" id="{{ cat.id }}" />
+      <label class="form-check-label" for="{{ cat.id }}">
+        <a href="{% url 'category_wise_book' cat.slug %}" class="text-decoration-none text-dark">{{ cat.name }}</a>
+      </label>
+    </div>
+    {% endfor %}
+  </div>
+  <div class="w-5/6 p-3">
+    <h4>{{ data | length }} results found</h4>
+    <div class="flex flex-wrap pt-5 ">
+      {% for book in data %}
+      <div class="max-w-sm rounded overflow-hidden shadow-lg bg-blue-100 m-4">
+        <div class="flex items-center justify-center p-4">
+          <img class="w-full text-center" style="width: 50%;" src="{{ book.image.url }}" alt="{{ book.title}}">
+        </div>
+        <div class="px-6 py-4">
+          <div class="font-bold text-xl mb-2">Name: {{ book.title }}</div>
+          <p class="text-gray-700 text-base">
+            Description: {{ book.description | truncatewords:10 }}
+          </p>
+          <p class="text-gray-700 text-base">
+           Price: {{ book.borrowing_price}}
+          </p>
+        </div>
+        <div class="px-6 pt-4 pb-2">
+          Category: {% for cat in book.category.all %}
+          <span class="bg-blue-500 text-white text-sm p-1 m-1 rounded">{{cat.name}}</span>
+          {% endfor %}
+        </div>
+        <div class="my-8 p-4">
+          <a href="{% url 'book_detail' book.id %}"
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Read Details</a>
+
+          {% if request.user.is_authenticated %}
+          <a href="{% url 'edit_book' book.id %}"
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Edit</a>
+          <a href="{% url 'delete_book' book.id %}"
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">Delete</a>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}

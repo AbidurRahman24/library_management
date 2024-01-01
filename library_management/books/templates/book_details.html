@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<div class="max-w-sm w-full lg:max-w-full lg:flex m-8 ">
+    <div class="text-gray-200 font-bold text-xl mb-2">Book Details</div>
+    <div class="h-48 lg:h-auto lg:w-48 flex-none bg-cover rounded-t lg:rounded-t-none lg:rounded-l text-center overflow-hidden" style="background-image: url('/img/card-left.jpg')" title="Woman holding a mug">
+    </div>
+    <div class="border-r border-b border-l border-gray-400 lg:border-l-0 lg:border-t lg:border-gray-400 bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal">
+      <div class="mb-8">
+        <p class="text-sm text-gray-600 flex items-center">
+            <img src="{{book.image.url}}" class="w-4/12 h-auto" alt="Responsive image">
+        </p>
+        <div class="text-gray-900 font-bold text-xl mb-2">{{book.title}}</div>
+        <p class="text-gray-700 text-base">Description: {{book.description}}</p>
+        <p class="text-gray-700 text-base">Price: ${{book.borrowing_price}}</p>
+      </div>
+      <div class="flex items-center">
+        <div class="text-sm">
+          <p class="text-gray-900 leading-none">
+            <a href="{% url 'add_to_cart' book.id %}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">BUY NOW</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card m-2 bg-yellow-200">
+    <h5 class="p-3">Total Review : {{ comments | length }}</h5>
+    {% for comment in comments %}
+        <div class="border m-2">
+            <div class="p-4">
+                <p class="font-semibold">{{ comment.name }}</p>
+                <p class="text-gray-600">{{ comment.created_on }}</p>
+                <p>{{ comment.body }}</p>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+<div class="card m-2 bg-blue-200">
+    <div class="card-body">
+        <form method="post">
+            <h1 class="text-2xl font-bold mb-4">Add Review</h1>
+            {% csrf_token %}
+            {{comment_form | crispy}}
+
+            <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded-md">Submit</button>
+        </form>
+    </div>
+</div>
+
+
+{% endblock %}
